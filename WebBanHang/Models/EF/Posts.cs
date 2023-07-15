@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebBanHang.Models.EF;
 
-namespace WebBanHangOnline.Models.EF
+namespace WebBanHang.Models.EF
 {
     [Table("tb_Posts")]
     public class Posts: CommonAbstract

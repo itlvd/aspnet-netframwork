@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace WebBanHangOnline.Models.EF
+namespace WebBanHang.Models.EF
 {
     [Table("tb_SystemSetting")]
     public class SystemSetting

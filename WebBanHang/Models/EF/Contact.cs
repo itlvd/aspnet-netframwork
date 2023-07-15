@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using WebBanHang.Models.EF;
 
-namespace WebBanHangOnline.Models.EF
+namespace WebBanHang.Models.EF
 {
     [Table("tb_Contact")]
     public class Contact : CommonAbstract
