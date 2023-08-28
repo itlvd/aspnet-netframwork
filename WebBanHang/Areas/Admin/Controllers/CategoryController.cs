@@ -87,16 +87,18 @@ namespace WebBanHang.Areas.Admin.Controllers
         }
 
 
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             var item = _dbConnect.Categories.FirstOrDefault(c => c.Id == id);
-            if(item == null)
+            if(item != null)
             {
-                return View("Index");
+                _dbConnect.Categories.Remove(item);
+                _dbConnect.SaveChanges();
+                return Json(new { success = true });
             }
-            _dbConnect.Categories.Remove(item);
-            _dbConnect.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(new { success = false });
+
         }
     }
 }
