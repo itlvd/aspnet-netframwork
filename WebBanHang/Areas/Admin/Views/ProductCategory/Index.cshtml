@@ -1,7 +1,7 @@
 ﻿@using PagedList.Mvc
-@model PagedList.IPagedList<WebBanHang.Models.EF.Product>
+@model PagedList.IPagedList<WebBanHang.Models.EF.ProductCategory>
 @{
-    ViewBag.Title = "Danh sách sản phẩm";
+    ViewBag.Title = "Danh mục sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -26,7 +26,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Quản lý sản phẩm</h1>
+                <h1>Quản lý tin tức</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -47,39 +47,19 @@
             <h3 class="card-title">@ViewBag.Title</h3>
 
             <div class="card-tools">
-                <a href="/admin/products/add" class="btn btn-primary">Thêm mới</a>
+                <a href="/admin/productcategory/add" class="btn btn-primary">Thêm mới</a>
                 <a href="#" class="btn btn-danger" id="btnDeleteAll">Xoá</a>
             </div>
         </div>
         <div class="card-body">
-
-            <div class="row">
-                <div class="col-6">
-                    @using (Html.BeginForm("index", "Products", FormMethod.Get, new { }))
-                    {
-                        <div class="input-group input-group-sm">
-                            @Html.TextBox("SearchText", "", new { @class = "form-control" })
-                            <span class="input-group-append">
-                                <button type="submit" class="btn btn-info btn-flat">Tìm kiếm</button>
-                            </span>
-                        </div>
-                    }
-                </div>
-
-            </div>
 
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll" /></th>
                         <th>STT</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Danh mục</th>
-                        <th>Số lượng</th>
-                        <th>Giá</th>
+                        <th>Tên mục</th>
                         <th>Ngày tạo</th>
-                        <th>Hiển thị</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -89,21 +69,15 @@
                         var i = ViewBag.PageSize * (ViewBag.PageIndex - 1) + 1;
                         foreach (var item in Model)
                         {
-                            var strCheck = item.IsActive ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                            
                             <tr id="trow_@item.Id">
                                 <td><input type="checkbox" class="cbkItem" value="@item.Id" /></td>
                                 <td>@i</td>
-                                <td><img src=@item.ProductImage.FirstOrDefault(x=>x.IsDefault).Image width="50" height="50" /></td>
                                 <td>@item.Title</td>
-                                <td>@item.ProductCategory.Title</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.Price</td>
                                 <td>@item.CreateDate.ToString("dd/MM/yyyy")</td>
-                                <td class="text-center">
-                                    <a href='#' data-id='@item.Id' class="btnActive"> @Html.Raw(strCheck) </a>
-                                </td>
+                                
                                 <td>
-                                    <a href="/admin/products/edit/@item.Id" class="btn btn-sm btn-warning">Sửa</a>
+                                    <a href="/admin/productcategory/edit/@item.Id" class="btn btn-sm btn-warning">Sửa</a>
                                     <a href="#" data-id="@item.Id" class="btn btn-sm btn-danger btnDelete">Xoá</a>
                                 </td>
                             </tr>
@@ -148,10 +122,10 @@
                     }
                 });
                 if (ids.length > 0) {
-                    var conf = confirm("Bạn có muốn xoá tất cả sản phẩm này không?");
+                    var conf = confirm("Bạn có muốn xoá tất cả tin tức này không?");
                     if (conf == true) {
                         $.ajax({
-                            url: '/products/deleteAll',
+                            url: '/productcategory/deleteAll',
                             type: 'POST',
                             data: { ids: ids },
                             success: function (res) {
@@ -181,7 +155,7 @@
                 var conf = confirm("Bạn có muốn xoá dữ liệu này không?");
                 if (conf === true) {
                     $.ajax({
-                        url: '/admin/products/delete/',
+                        url: '/admin/productcategory/delete/',
                         type: "POST",
                         data: { id: id },
                         success: function (res) {
@@ -196,25 +170,23 @@
 
 
             $('body').on('click', '.btnActive', function () {
-                
+
                 var btn = $(this);
                 var id = $(this).data("id");
                 $.ajax({
-                    url: '/admin/products/IsActive/',
+                    url: '/admin/productcategory/IsActive/',
                     type: "POST",
                     data: { id: id },
                     success: function (res) {
                         debugger;
                         if (res.success) {
-                            if (res.isActive) {
+                            if (res.IsActive) {
                                 btn.html("<i class='fa fa-check text-success'></i>");
                             }
                             else {
                                 btn.html("<i class='fa fa-times text-danger'></i>");
                             }
                         }
-
-
                     }
                 });
             });
@@ -222,4 +194,3 @@
     </script>
 
 }
-

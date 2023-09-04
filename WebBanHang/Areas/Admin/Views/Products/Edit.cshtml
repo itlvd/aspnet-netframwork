@@ -1,6 +1,6 @@
 ﻿@model WebBanHang.Models.EF.Product
 @{
-    ViewBag.Title = "Thêm sản phẩm";
+    ViewBag.Title = "Cập nhật sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -18,7 +18,7 @@
             <a href="/admin/products" class="nav-link">Sản phẩm</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Thêm mới</a>
+            <a href="#" class="nav-link">Cập nhật</a>
         </li>
     </ul>
 }
@@ -29,12 +29,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Thêm mới Sản phẩm</h1>
+                <h1>Cập nhật Sản phẩm</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Sản phẩm</a></li>
-                    <li class="breadcrumb-item active">Thêm mới</li>
+                    <li class="breadcrumb-item active">Cập nhật</li>
                 </ol>
             </div>
         </div>
@@ -47,20 +47,20 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Thông tin thêm mới Sản phẩm</h3>
+            <h3 class="card-title">Thông tin cập nhật Sản phẩm</h3>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    @using (Html.BeginForm("Add", "Products", FormMethod.Post, new { }))
+                    @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
+                        @Html.HiddenFor(x=>x.Id)
                         <div class="card">
                             <div class="card-header p-2">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Thông tin chung</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Hình ảnh</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">SEO</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
@@ -101,14 +101,14 @@
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Số lượng</label>
-                                                    @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control", @Value = "1" })
+                                                    @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control", @Value = @Model.Quantity })
                                                     @Html.ValidationMessageFor(x => x.Quantity, null, new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Giá</label>
-                                                    <input type="text" name="demoPrice" value="0" id="demoPrice" class="form-control auto" data-a-dec="," data-a-sep=".">
+                                                    <input type="text" name="demoPrice" value="@Model.Price" id="demoPrice" class="form-control auto" data-a-dec="," data-a-sep=".">
                                                     @Html.HiddenFor(x => x.Price, new { @class = "", @placeholder = "Giá" })
                                                     @Html.ValidationMessageFor(x => x.Price, null, new { @class = "text-danger" })
                                                 </div>
@@ -116,7 +116,7 @@
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Giá khuyến mãi</label>
-                                                    <input type="text" name="demoPriceSale" id="demoPriceSale" value="0" class="form-control auto">
+                                                    <input type="text" name="demoPriceSale" id="demoPriceSale" value="@Model.PriceSale" class="form-control auto">
                                                     @Html.HiddenFor(x => x.PriceSale, new { @class = "form-control", @placeholder = "Khuyến mãi" })
                                                     @Html.ValidationMessageFor(x => x.PriceSale, null, new { @class = "text-danger" })
                                                 </div>
@@ -157,29 +157,6 @@
                                                         <label for="IsSaleCheckbox" class="custom-control-label">Khuyến mãi</label>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.tab-pane -->
-                                    <div class="tab-pane" id="timeline">
-                                        <div class="row">
-                                            <div class="col-md-12 text-right">
-                                                <input type="button" class="btn btn-primary" id="iTaiAnh" onclick="BrowseServer();" value="Tải ảnh" />
-                                            </div>
-                                            <div class="col-md-12">
-                                                <table class="table table-hover" id="tbAnhSanPham">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center">#</th>
-                                                            <th class="text-center">Ảnh</th>
-                                                            <th class="text-center">Ảnh đại diện</th>
-                                                            <th class="text-center">Thao tác</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbHtml">
-                                                    </tbody>
-                                                </table>
-                                                <input type="hidden" id="tCurrentId" value="0" />
                                             </div>
                                         </div>
                                     </div>
@@ -253,63 +230,8 @@
                 extraAllowedContent: 'span',
             });
 
-            $('body').on('click', '.btnXoaAnh', function () {
-                var conf = confirm('Bạn có muốn xóa ảnh này không?');
-                if (conf === true) {
-                    var _id = $(this).data('id');
-                    $('#trow_' + _id).fadeTo('fast', 0.5, function () {
-                        $(this).slideUp('fast', function () { $(this).remove(); });
-                    });
-                    var temp = $('#tCurrentId').val();
-                    var currentId = parseInt(temp) - 1;
-                    $('#tCurrentId').val(currentId);
-                }
-            });
+            
         });
-        function BrowseServer(field) {
-            var finder = new CKFinder();
-            finder.selectActionFunction = function (fileUrl) {
-                addImageProduct(fileUrl);
-            };
-            finder.popup();
-        }
-        function addImageProduct(url) {
-            var temp = $('#tCurrentId').val();
-            var currentId = parseInt(temp) + 1;
-            var str = "";
-            if (currentId == 1) {
-                str += `<tr id="trow_${currentId}">
-                                <td class="text-center">${currentId}</td>
-                                <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
-                                <td class="text-center"><input type="radio" name="rDefault" value="${currentId}" checked="checked"/></td>
-                                <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                </tr>`;
-            }
-            else {
-                str += `<tr id="trow_${currentId}">
-                                <td class="text-center">${currentId}</td>
-                                <td class="text-center"><img width="80" src="${url}" /> <input type='hidden' value="${url}" name="Images"/></td>
-                                <td class="text-center"><input type="radio" name="rDefault" value="${currentId}"/></td>
-                                <td class="text-center"><a href="#" data-id="${currentId}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                </tr>`;
-            }
-            $('#tbHtml').append(str);
-            $('#tCurrentId').val(currentId);
-            //$('#tbHtml tr td a').each(function () {
-            //    $(this).click(function () {
-            //        var conf = confirm('Bạn có muốn xóa ảnh này không?');
-            //        if (conf === true) {
-            //            var _id = $(this).data('id');
-            //            $('#trow_' + _id).fadeTo('fast',1, function () {
-            //                $(this).slideUp('fast', function () { $(this).remove(); });
-            //            });
-            //            var temp = $('#tCurrentId').val();
-            //            var currentId = parseInt(temp) - 1;
-            //            $('#tCurrentId').val(currentId);
-            //            }
-            //        });
-            //    });
-        }
-
+        
     </script>
 }
