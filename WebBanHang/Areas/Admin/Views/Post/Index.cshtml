@@ -146,7 +146,7 @@
                     var conf = confirm("Bạn có muốn xoá tất cả bài viết này không?");
                     if (conf == true) {
                         $.ajax({
-                            url: '/post/deleteAll',
+                            url: '/post/DeleteAll',
                             type: 'POST',
                             data: { ids: ids },
                             success: function (res) {

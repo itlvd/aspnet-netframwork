@@ -60,7 +60,7 @@ namespace WebBanHang.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            var item = _dbConnect.News.FirstOrDefault(x => x.Id == id);
+            var item = _dbConnect.Posts.FirstOrDefault(x => x.Id == id);
             return View(item);
         }
 
@@ -113,14 +113,14 @@ namespace WebBanHang.Areas.Admin.Controllers
 
 
 
-        public ActionResult deleteAll(List<int> ids)
+        public ActionResult DeleteAll(List<int> ids)
         {
             if (ids.Count > 0)
             {
                 foreach (var id in ids)
                 {
-                    var obj = _dbConnect.News.FirstOrDefault(x => x.Id == id);
-                    _dbConnect.News.Remove(obj);
+                    var obj = _dbConnect.Posts.FirstOrDefault(x => x.Id == id);
+                    _dbConnect.Posts.Remove(obj);
                     _dbConnect.SaveChanges();
 
                 }
