@@ -15,7 +15,7 @@ namespace WebBanHang.Areas.Admin.Controllers
         // GET: Admin/Category
         public ActionResult Index()
         {
-            var items = _dbConnect.Categories.ToList();
+            var items = _dbConnect.Categories.OrderBy(x=>x.Position).ToList();
             return View(items);
         }
 

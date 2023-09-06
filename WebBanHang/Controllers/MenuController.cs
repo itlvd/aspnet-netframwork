@@ -34,7 +34,7 @@ namespace WebBanHang.Controllers
                 ViewBag.CateId = id;
             }
             var items = db.ProductCategories.ToList();
-            return PartialView("_MenuLeft", items);
+            return PartialView("MenuLeft", items);
         }
 
         public ActionResult MenuArrivals()
